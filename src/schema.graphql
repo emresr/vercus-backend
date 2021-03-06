@@ -1,21 +1,59 @@
 type Query {
+  me: User!
   users: [User!]!
   user(id: ID!): User!
+  groups: [Group!]!
+  group(id: ID!): Group!
+  tournaments: [Tournament!]!
+  tournament(id: ID!): Tournament!
+  competators: [Competator!]!
+  competator(id: ID!): Competator!
 }
 type Mutation {
   signup(email: String!, password: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
-  updateUser(email: String, name: String, id: ID!): User!
+  updateUser(id: ID!, email: String!, name: String): User!
   deleteUser(id: ID!): User!
+
+  #Competator
+  createCompetator(groupId: ID!): Competator!
+  updateCompetator(groupId: ID!): Competator!
+  #Group
+  createGroup(name: String, tournamentId: ID!): Group!
+
+  #Tournament
+  createTournament(title: String!): Tournament!
 }
+scalar DateTime
 
 type User {
   id: ID!
   email: String!
-  password: String!
   name: String
+  createdAt: DateTime
+  competators: [Competator]
 }
+
 type AuthPayload {
-  token: String!
+  token: String
   user: User
+}
+type Competator {
+  id: ID!
+  createdAt: DateTime
+  user: User
+  group: Group
+  point: Int
+}
+type Group {
+  id: ID!
+  name: String
+  tournament: Tournament
+  competators: [Competator]
+}
+type Tournament {
+  id: ID!
+  title: String!
+  createdAt: DateTime
+  groups: [Group]
 }

@@ -65,10 +65,57 @@ async function deleteUser(parent, args, context, info) {
   });
   return deleteUser;
 }
+// competator
+async function createCompetator(parent, args, context, info) {
+  const { userId } = context;
+
+  return await context.prisma.competator.create({
+    data: {
+      group: { connect: { id: 1 } },
+      user: { connect: { id: 1 } },
+    },
+  });
+}
+
+async function updateCompetator(parent, args, context, info) {
+  return await context.prisma.competator.update({
+    where: {
+      id: 1,
+    },
+    data: {
+      group: { connect: { id: 1 } },
+      point: 13,
+    },
+  });
+}
+
+// group
+async function createGroup(parent, args, context, info) {
+  const { userId } = context;
+
+  return await context.prisma.group.create({
+    data: {
+      tournament: { connect: { id: parseInt(args.tournamentId) } },
+      name: args.name,
+    },
+  });
+}
+// tournament
+async function createTournament(parent, args, context, info) {
+  return await context.prisma.tournament.create({
+    data: {
+      title: args.title,
+    },
+  });
+}
 
 module.exports = {
   signup,
   login,
   updateUser,
   deleteUser,
+  createGroup,
+  createTournament,
+  createCompetator,
+  updateCompetator,
 };

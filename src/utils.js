@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const APP_SECRET = "vercus";
+const APP_SECRET = "prisma";
 
 function getTokenPayload(token) {
   return jwt.verify(token, APP_SECRET);

@@ -7,10 +7,17 @@ const { getUserId } = require("./utils");
 const Query = require("./resolvers/query.js");
 const Mutation = require("./resolvers/mutation.js");
 const User = require("./resolvers/user.js");
+const Tournament = require("./resolvers/tournament.js");
+const Group = require("./resolvers/group.js");
+const Competator = require("./resolvers/competator.js");
 
 const resolvers = {
   Query,
   Mutation,
+  Competator,
+  Group,
+  Tournament,
+  User,
 };
 const prisma = new PrismaClient();
 
