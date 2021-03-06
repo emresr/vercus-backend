@@ -1,6 +1,6 @@
 function competators(parent, args, context) {
   return context.prisma.group
-    .findMany({ where: { id: parent.id } })
+    .findUnique({ where: { id: parent.id } })
     .competators();
 }
 

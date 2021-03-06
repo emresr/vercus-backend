@@ -21,7 +21,6 @@ model User {
   email   String   @unique
   password String
   name    String?
-  competators Competator[]
 }
 
 model Group {
@@ -29,14 +28,12 @@ model Group {
   name      String
   tournament      Tournament?    @relation(fields: [tournamentId], references: [id])
   tournamentId    Int?
-  competators Competator[] @relation(name:"lmao")
+  competators Competator[]
 }
 model Competator {
   id      Int      @default(autoincrement()) @id
   createdAt DateTime @default(now())
-  user      User?    @relation(fields: [userId], references: [id])
-  userId    Int?
-  group      Group ?    @relation(name:"lmao",fields: [groupId], references: [id])
+  group      Group?    @relation(fields: [groupId], references: [id])
   groupId    Int?
   point   Int @default(0)
 }

@@ -72,7 +72,6 @@ async function createCompetator(parent, args, context, info) {
   return await context.prisma.competator.create({
     data: {
       group: { connect: { id: 1 } },
-      user: { connect: { id: 1 } },
     },
   });
 }

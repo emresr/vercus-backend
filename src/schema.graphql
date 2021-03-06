@@ -31,7 +31,6 @@ type User {
   email: String!
   name: String
   createdAt: DateTime
-  competators: [Competator]
 }
 
 type AuthPayload {
@@ -41,7 +40,6 @@ type AuthPayload {
 type Competator {
   id: ID!
   createdAt: DateTime
-  user: User
   group: Group
   point: Int
 }
