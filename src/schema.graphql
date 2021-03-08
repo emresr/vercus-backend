@@ -8,6 +8,8 @@ type Query {
   tournament(id: ID!): Tournament!
   competators: [Competator!]!
   competator(id: ID!): Competator!
+  matchs: [Match!]!
+  match(id: ID!): Match!
 }
 type Mutation {
   signup(email: String!, password: String!): AuthPayload
@@ -23,6 +25,11 @@ type Mutation {
 
   #Tournament
   createTournament(title: String!): Tournament!
+
+  #Match
+  createMatch(userId: ID!, groupId: ID): Match!
+  updateMatch(userId: ID, matchId: ID!): Match!
+  finishMatch(matchId: ID!, finished: Boolean, winnerId: ID): Match!
 }
 scalar DateTime
 
@@ -31,6 +38,7 @@ type User {
   email: String!
   name: String
   createdAt: DateTime
+  competators: [Competator]
 }
 
 type AuthPayload {
@@ -40,18 +48,29 @@ type AuthPayload {
 type Competator {
   id: ID!
   createdAt: DateTime
+  user: User
   group: Group
   point: Int
+  matchs: [Match]
 }
 type Group {
   id: ID!
   name: String
   tournament: Tournament
   competators: [Competator]
+  matchs: [Match]
 }
 type Tournament {
   id: ID!
   title: String!
   createdAt: DateTime
   groups: [Group]
+}
+
+type Match {
+  id: ID!
+  competators: [Competator]
+  finished: Boolean
+  group: Group
+  winnerId: ID!
 }

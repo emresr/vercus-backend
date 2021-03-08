@@ -68,10 +68,11 @@ async function deleteUser(parent, args, context, info) {
 // competator
 async function createCompetator(parent, args, context, info) {
   const { userId } = context;
-
+  console.log(userId);
   return await context.prisma.competator.create({
     data: {
-      group: { connect: { id: 1 } },
+      group: { connect: { id: parseInt(args.groupId) } },
+      user: { connect: { id: 1 } },
     },
   });
 }
@@ -108,6 +109,50 @@ async function createTournament(parent, args, context, info) {
   });
 }
 
+// match
+async function createMatch(parent, args, context, info) {
+  return await context.prisma.match.create({
+    data: {
+      competators: { connect: { id: parseInt(args.userId) } },
+      group: { connect: { id: parseInt(args.groupId) } },
+    },
+  });
+}
+
+async function addCompetatorToMatch(parent, args, context, info) {
+  return await context.prisma.competator.update({
+    where: {
+      id: parseInt(args.competatorId),
+    },
+    data: {
+      match: { connect: { id: parseInt(args.matchId) } },
+    },
+  });
+}
+
+async function updateMatch(parent, args, context, info) {
+  return await context.prisma.match.update({
+    where: {
+      id: 1,
+    },
+    data: {
+      competators: { connect: { id: parseInt(args.userId) } },
+    },
+  });
+}
+
+async function finishMatch(parent, args, context, info) {
+  return await context.prisma.match.update({
+    where: {
+      id: 1,
+    },
+    data: {
+      finished: args.finished,
+      winnerId: parseInt(args.winnerId),
+    },
+  });
+}
+
 module.exports = {
   signup,
   login,
@@ -117,4 +162,6 @@ module.exports = {
   createTournament,
   createCompetator,
   updateCompetator,
+  createMatch,
+  finishMatch,
 };

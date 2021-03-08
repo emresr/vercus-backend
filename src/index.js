@@ -10,6 +10,7 @@ const User = require("./resolvers/user.js");
 const Tournament = require("./resolvers/tournament.js");
 const Group = require("./resolvers/group.js");
 const Competator = require("./resolvers/competator.js");
+const Match = require("./resolvers/match.js");
 
 const resolvers = {
   Query,
@@ -18,6 +19,7 @@ const resolvers = {
   Group,
   Tournament,
   User,
+  Match,
 };
 const prisma = new PrismaClient();
 

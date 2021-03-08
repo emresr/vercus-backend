@@ -51,6 +51,17 @@ async function competator(parent, args, context, info) {
     },
   });
 }
+async function matchs(parent, args, context, info) {
+  return await context.prisma.match.findMany();
+}
+
+async function match(parent, args, context, info) {
+  return await context.prisma.match.findUnique({
+    where: {
+      id: parseInt(args.id),
+    },
+  });
+}
 
 module.exports = {
   me,
@@ -62,4 +73,6 @@ module.exports = {
   tournament,
   competator,
   competators,
+  matchs,
+  match,
 };
