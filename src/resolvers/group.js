@@ -10,7 +10,7 @@ function tournament(parent, args, context) {
     .tournament();
 }
 function matchs(parent, args, context) {
-  return context.prisma.group.findMany({ where: { id: parent.id } }).matchs();
+  return context.prisma.group.findUnique({ where: { id: parent.id } }).matchs();
 }
 module.exports = {
   competators,

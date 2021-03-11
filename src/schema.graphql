@@ -4,7 +4,7 @@ type Query {
   user(id: ID!): User!
   groups: [Group!]!
   group(id: ID!): Group!
-  tournaments: [Tournament!]!
+  tournaments(orderBy: String, where: String): [Tournament!]!
   tournament(id: ID!): Tournament!
   competators: [Competator!]!
   competator(id: ID!): Competator!
@@ -19,17 +19,19 @@ type Mutation {
 
   #Competator
   createCompetator(groupId: ID!): Competator!
-  updateCompetator(groupId: ID!): Competator!
+  updateCompetator(groupId: ID, point: Int!, competatorId: ID!): Competator!
   #Group
   createGroup(name: String, tournamentId: ID!): Group!
 
   #Tournament
   createTournament(title: String!): Tournament!
+  updateTournament(finished: Boolean!, tournamentId: ID!): Tournament!
 
   #Match
-  createMatch(userId: ID!, groupId: ID): Match!
+  createMatch(competatorId: ID!, groupId: ID): Match!
   updateMatch(userId: ID, matchId: ID!): Match!
   finishMatch(matchId: ID!, finished: Boolean, winnerId: ID): Match!
+  addCompetatorToMatch(competatorId: ID!, matchId: ID!): Match!
 }
 scalar DateTime
 
@@ -65,6 +67,7 @@ type Tournament {
   title: String!
   createdAt: DateTime
   groups: [Group]
+  finished: Boolean
 }
 
 type Match {
@@ -72,5 +75,5 @@ type Match {
   competators: [Competator]
   finished: Boolean
   group: Group
-  winnerId: ID!
+  winnerId: Int
 }

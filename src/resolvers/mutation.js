@@ -68,25 +68,36 @@ async function deleteUser(parent, args, context, info) {
 // competator
 async function createCompetator(parent, args, context, info) {
   const { userId } = context;
-  console.log(userId);
+
   return await context.prisma.competator.create({
     data: {
       group: { connect: { id: parseInt(args.groupId) } },
-      user: { connect: { id: 1 } },
+      user: { connect: { id: 4 } },
     },
   });
 }
 
 async function updateCompetator(parent, args, context, info) {
-  return await context.prisma.competator.update({
-    where: {
-      id: 1,
-    },
-    data: {
-      group: { connect: { id: 1 } },
-      point: 13,
-    },
-  });
+  if (!args.groupId) {
+    return await context.prisma.competator.update({
+      where: {
+        id: parseInt(args.competatorId),
+      },
+      data: {
+        point: parseInt(args.point),
+      },
+    });
+  } else {
+    return await context.prisma.competator.update({
+      where: {
+        id: parseInt(args.competatorId),
+      },
+      data: {
+        group: { connect: { id: parseInt(args.groupId) } },
+        point: parseInt(args.point),
+      },
+    });
+  }
 }
 
 // group
@@ -108,12 +119,21 @@ async function createTournament(parent, args, context, info) {
     },
   });
 }
-
+async function updateTournament(parent, args, context, info) {
+  return await context.prisma.tournament.update({
+    where: {
+      id: parseInt(args.tournamentId),
+    },
+    data: {
+      finished: args.finished,
+    },
+  });
+}
 // match
 async function createMatch(parent, args, context, info) {
   return await context.prisma.match.create({
     data: {
-      competators: { connect: { id: parseInt(args.userId) } },
+      competators: { connect: { id: parseInt(args.competatorId) } },
       group: { connect: { id: parseInt(args.groupId) } },
     },
   });
@@ -125,7 +145,7 @@ async function addCompetatorToMatch(parent, args, context, info) {
       id: parseInt(args.competatorId),
     },
     data: {
-      match: { connect: { id: parseInt(args.matchId) } },
+      matchs: { connect: { id: parseInt(args.matchId) } },
     },
   });
 }
@@ -136,7 +156,7 @@ async function updateMatch(parent, args, context, info) {
       id: 1,
     },
     data: {
-      competators: { connect: { id: parseInt(args.userId) } },
+      competators: { connect: { id: parseInt(args.competatorId) } },
     },
   });
 }
@@ -160,8 +180,10 @@ module.exports = {
   deleteUser,
   createGroup,
   createTournament,
+  updateTournament,
   createCompetator,
   updateCompetator,
   createMatch,
   finishMatch,
+  addCompetatorToMatch,
 };

@@ -19,7 +19,16 @@ async function user(parent, args, context, info) {
   });
 }
 async function tournaments(parent, args, context, info) {
-  return await context.prisma.tournament.findMany();
+  return await context.prisma.tournament.findMany({
+    orderBy: [
+      {
+        id: "asc",
+      },
+    ],
+    where: {
+      finished: false,
+    },
+  });
 }
 
 async function tournament(parent, args, context, info) {

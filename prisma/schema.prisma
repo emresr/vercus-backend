@@ -13,6 +13,8 @@ model Tournament {
   updatedAt DateTime @updatedAt
   type Type?
   groups Group[]
+  started Boolean @default(false)
+  finished Boolean @default(false)
 }
 
 model User {
@@ -43,6 +45,7 @@ model Competator {
   userId    Int?
   point   Int @default(0)
   matchs Match[]
+  played  Int @default(0)
 }
 model Match {
   id      Int      @default(autoincrement()) @id
