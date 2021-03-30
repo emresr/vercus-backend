@@ -33,6 +33,9 @@ type Mutation {
   finishMatch(matchId: ID!, finished: Boolean, winnerId: ID): Match!
   addCompetatorToMatch(competatorId: ID!, matchId: ID!): Match!
 }
+type Subscription {
+  newCompetator(tournamentId: ID!): Competator!
+}
 scalar DateTime
 
 type User {

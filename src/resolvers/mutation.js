@@ -69,12 +69,15 @@ async function deleteUser(parent, args, context, info) {
 async function createCompetator(parent, args, context, info) {
   const { userId } = context;
 
-  return await context.prisma.competator.create({
+  const newCompetator = await context.prisma.competator.create({
     data: {
       group: { connect: { id: parseInt(args.groupId) } },
-      user: { connect: { id: 4 } },
+      user: { connect: { id: userId } },
     },
   });
+  context.pubsub.publish("NEW_COMPETATOR", newCompetator);
+
+  return newCompetator;
 }
 
 async function updateCompetator(parent, args, context, info) {
@@ -153,7 +156,7 @@ async function addCompetatorToMatch(parent, args, context, info) {
 async function updateMatch(parent, args, context, info) {
   return await context.prisma.match.update({
     where: {
-      id: 1,
+      id: args.matchId,
     },
     data: {
       competators: { connect: { id: parseInt(args.competatorId) } },
