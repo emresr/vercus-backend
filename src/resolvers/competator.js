@@ -3,6 +3,11 @@ function group(parent, args, context) {
     .findUnique({ where: { id: parent.id } })
     .group();
 }
+function tournament(parent, args, context) {
+  return context.prisma.competator
+    .findUnique({ where: { id: parent.id } })
+    .tournament();
+}
 function user(parent, args, context) {
   return context.prisma.competator
     .findUnique({ where: { id: parent.id } })
@@ -17,4 +22,5 @@ module.exports = {
   group,
   user,
   matchs,
+  tournament,
 };

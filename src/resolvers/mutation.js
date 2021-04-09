@@ -71,7 +71,7 @@ async function createCompetator(parent, args, context, info) {
 
   const newCompetator = await context.prisma.competator.create({
     data: {
-      group: { connect: { id: parseInt(args.groupId) } },
+      tournament: { connect: { id: parseInt(args.tournamentId) } },
       user: { connect: { id: userId } },
     },
   });
@@ -132,6 +132,7 @@ async function updateTournament(parent, args, context, info) {
     },
   });
 }
+
 // match
 async function createMatch(parent, args, context, info) {
   return await context.prisma.match.create({
@@ -165,15 +166,84 @@ async function updateMatch(parent, args, context, info) {
 }
 
 async function finishMatch(parent, args, context, info) {
-  return await context.prisma.match.update({
+  const finishedMatch = await context.prisma.match.update({
     where: {
-      id: 1,
+      id: parseInt(args.matchId),
     },
     data: {
       finished: args.finished,
       winnerId: parseInt(args.winnerId),
     },
+    include: {
+      competators: {
+        select: { id: true },
+      },
+    },
   });
+  const first = await context.prisma.competator.findUnique({
+    where: { id: finishedMatch.competators[0].id },
+    select: {
+      played: true,
+      point: true,
+    },
+  });
+  console.log(first);
+  if (finishedMatch.competators[0].id === parseInt(args.winnerId)) {
+    first1 = await context.prisma.competator.update({
+      where: {
+        id: finishedMatch.competators[0].id,
+      },
+      data: {
+        played: first.played + 1,
+        point: first.played + 1,
+      },
+    });
+    context.pubsub.publish("COMPETATOR_UPDATED", first1);
+  } else {
+    first2 = await context.prisma.competator.update({
+      where: {
+        id: finishedMatch.competators[0].id,
+      },
+      data: {
+        played: first.played + 1,
+      },
+    });
+    context.pubsub.publish("COMPETATOR_UPDATED", first0);
+  }
+
+  const second = await context.prisma.competator.findUnique({
+    where: { id: finishedMatch.competators[1].id },
+    select: {
+      played: true,
+      point: true,
+    },
+  });
+  if (finishedMatch.competators[1].id === parseInt(args.winnerId)) {
+    const second1 = await context.prisma.competator.update({
+      where: {
+        id: finishedMatch.competators[1].id,
+      },
+      data: {
+        played: second.played + 1,
+        point: second.played + 1,
+      },
+    });
+    context.pubsub.publish("COMPETATOR_UPDATED", second1);
+  } else {
+    const second0 = await context.prisma.competator.update({
+      where: {
+        id: finishedMatch.competators[1].id,
+      },
+      data: {
+        played: second.played + 1,
+      },
+    });
+    context.pubsub.publish("COMPETATOR_UPDATED", second0);
+  }
+  console.log(finishedMatch);
+
+  context.pubsub.publish("MATCH_FINISHED", finishedMatch);
+  return finishedMatch;
 }
 
 module.exports = {
